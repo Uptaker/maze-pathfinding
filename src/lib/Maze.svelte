@@ -1,7 +1,8 @@
 <script lang="ts">
 
   import {onMount} from 'svelte'
-  import {Direction, Position, Tile, Type} from '../types'
+  import type {Position, Tile} from '../types'
+  import {Direction, Type} from '../types'
 
   let debugMode = false
   let mouseDown = false
@@ -46,7 +47,7 @@
       case Type.START: return 'cyan'
       case Type.FINISH: return 'forestgreen'
       case Type.OBSTACLE: return '#5f1602'
-      default: return 'moccasin'
+      default: return '#f1d2d0'
     }
   }
 
@@ -60,7 +61,7 @@
     swapTile(tile)
   }
 
-  function solve() {
+  async function solve() {
     let queue = [{x: startPosition.x, y: startPosition.y}] as Position[]
     let pathFound = false
     let pos: Position
@@ -76,7 +77,6 @@
           state[pos.x - 1][pos.y].type = Type.GRAY
         }
       }
-
       if (pos.x < state.length - 1) {
         if (state[pos.x + 1][pos.y].type === Type.FINISH) pathFound = true
         else if (state[pos.x + 1][pos.y].type === Type.EMPTY) {
@@ -85,7 +85,6 @@
           state[pos.x + 1][pos.y].type = Type.GRAY
         }
       }
-
       if (pos.y > 0) {
         if (state[pos.x][pos.y - 1].type === Type.FINISH) pathFound = true
         else if (state[pos.x][pos.y - 1].type === Type.EMPTY) {
@@ -94,7 +93,6 @@
           state[pos.x][pos.y - 1].type = Type.GRAY
         }
       }
-
       if (pos.y < state[0].length - 1) {
         if (state[pos.x][pos.y + 1].type === Type.FINISH) pathFound = true
         else if (state[pos.x][pos.y + 1].type === Type.EMPTY) {
