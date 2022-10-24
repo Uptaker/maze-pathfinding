@@ -3,25 +3,27 @@
   import {onMount} from 'svelte'
 
   enum Type {
-    START = 'S', FINISH = 'F', WHITE = 'W', GRAY = 'G', BLACK = 'B', OBSTACLE = 'O'
-  }
-
-  interface Position {
-    row: number,
-    column: number
+    START = 'S', FINISH = 'F', WHITE = 'W', GRAY = 'G', BLACK = 'B', OBSTACLE = 'O', EMPTY = '.'
   }
 
   interface Tile {
     type: Type,
+    x: number,
+    y: number
   }
 
   const stateAsStrings: string[] = [
-    '.S...OOOOO',
-    '...OOOO.F.',
-    '....OO....',
-    '.........O',
-    'O......OOO',
-    'OOO....OOO'
+    '.S...OOOOO......',
+    '...OOOO.F..OOOO.',
+    '....OO.OOOOO....',
+    '.........O.O.O..',
+    'O...O..OOO...O..',
+    'OOO.O....OOOOOO.',
+    'O...O.......O...',
+    'O...O...O...O...',
+    'O.......O...O...',
+    'O.......O...O...',
+    'OOO.....O.......'
   ]
 
   const state: Tile[][] = stringToTile(stateAsStrings)
@@ -33,7 +35,7 @@
     strings.forEach((r, x) => {
       const row = []
       const column = r.split("")
-      column.forEach((c, y) => row.push({type: c} as Tile))
+      column.forEach((c, y) => row.push({type: c, x, y} as Tile))
       startingState.push(row)
     })
     return startingState
@@ -46,7 +48,8 @@
       case Type.BLACK: return 'black'
       case Type.START: return 'yellow'
       case Type.FINISH: return 'green'
-      case Type.OBSTACLE: return 'beige'
+      case Type.OBSTACLE: return 'peru'
+      default: return 'moccasin'
     }
   }
 
@@ -88,7 +91,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 1px solid #bfbfbf
+        border: 1px solid sienna;
     }
 
     .board {
