@@ -85,7 +85,7 @@
     {/if}
 </div>
 
-<button>Move</button>
+<button>Solve</button>
 
 <style>
     .row {
