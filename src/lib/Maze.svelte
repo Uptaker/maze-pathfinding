@@ -61,74 +61,55 @@
   }
 
   function solve() {
-    let yQueue = [0]
-    let xQueue = [0]
+    let queue = [{x: startPosition.x, y: startPosition.y}] as Position[]
     let pathFound = false
-    let xLoc, yLoc
+    let pos: Position
 
-    while (xQueue.length > 0 && !pathFound) {
-      xLoc = xQueue.shift()
-      yLoc = yQueue.shift()
+    while (queue.length > 0 && !pathFound) {
+      pos = queue.shift()
 
-      if (xLoc > 0) {
-        if (state[xLoc - 1][yLoc].type === Type.FINISH) pathFound = true
-      }
-
-      if (xLoc < state.length - 1) {
-        if (state[xLoc + 1][yLoc].type === Type.FINISH) pathFound = true
-      }
-
-      if (yLoc > 0) {
-        if (state[xLoc][yLoc - 1].type === Type.FINISH) pathFound = true
-      }
-
-      if (yLoc < state[0].length - 1) {
-        if (state[xLoc][yLoc + 1].type === Type.FINISH) pathFound = true
-      }
-
-
-      // if empty
-      if (xLoc > 0) {
-        if (state[xLoc - 1][yLoc].type === Type.EMPTY) {
-          xQueue.push(xLoc - 1)
-          yQueue.push(yLoc)
-          state[xLoc - 1][yLoc].direction = Direction.DOWN
-          state[xLoc - 1][yLoc].type = Type.GRAY
+      if (pos.x > 0) {
+        if (state[pos.x - 1][pos.y].type === Type.FINISH) pathFound = true
+        else if (state[pos.x - 1][pos.y].type === Type.EMPTY) {
+          queue.push({x: pos.x - 1, y: pos.y})
+          state[pos.x - 1][pos.y].direction = Direction.DOWN
+          state[pos.x - 1][pos.y].type = Type.GRAY
         }
       }
 
-      if (xLoc < state.length - 1) {
-        if (state[xLoc + 1][yLoc].type === Type.EMPTY) {
-          xQueue.push(xLoc + 1)
-          yQueue.push(yLoc)
-          state[xLoc + 1][yLoc].direction = Direction.UP
-          state[xLoc + 1][yLoc].type = Type.GRAY
+      if (pos.x < state.length - 1) {
+        if (state[pos.x + 1][pos.y].type === Type.FINISH) pathFound = true
+        else if (state[pos.x + 1][pos.y].type === Type.EMPTY) {
+          queue.push({x: pos.x + 1, y: pos.y})
+          state[pos.x + 1][pos.y].direction = Direction.UP
+          state[pos.x + 1][pos.y].type = Type.GRAY
         }
       }
 
-      if (yLoc > 0) {
-        if (state[xLoc][yLoc - 1].type === Type.EMPTY) {
-          xQueue.push(xLoc)
-          yQueue.push(yLoc - 1)
-          state[xLoc][yLoc - 1].direction = Direction.RIGHT
-          state[xLoc][yLoc - 1].type = Type.GRAY
+      if (pos.y > 0) {
+        if (state[pos.x][pos.y - 1].type === Type.FINISH) pathFound = true
+        else if (state[pos.x][pos.y - 1].type === Type.EMPTY) {
+          queue.push({x: pos.x, y: pos.y - 1})
+          state[pos.x][pos.y - 1].direction = Direction.RIGHT
+          state[pos.x][pos.y - 1].type = Type.GRAY
         }
       }
 
-      if (yLoc < state[0].length - 1) {
-        if (state[xLoc][yLoc + 1].type === Type.EMPTY) {
-          xQueue.push(xLoc)
-          yQueue.push(yLoc + 1)
-          state[xLoc][yLoc + 1].direction = Direction.LEFT
-          state[xLoc][yLoc + 1].type = Type.GRAY
+      if (pos.y < state[0].length - 1) {
+        if (state[pos.x][pos.y + 1].type === Type.FINISH) pathFound = true
+        else if (state[pos.x][pos.y + 1].type === Type.EMPTY) {
+          queue.push({x: pos.x, y: pos.y + 1})
+          state[pos.x][pos.y + 1].direction = Direction.LEFT
+          state[pos.x][pos.y + 1].type = Type.GRAY
         }
       }
-
     }
 
     if (!pathFound) message = 'No path found :('
     else {
       message = 'Path found'
+      let xLoc = pos.x
+      let yLoc = pos.y
       let path = state[xLoc][yLoc].direction
       while (state[xLoc][yLoc].type !== Type.START) {
         state[xLoc][yLoc].type = Type.BLACK
@@ -136,8 +117,6 @@
         if (path === Direction.DOWN) xLoc += 1
         if (path === Direction.RIGHT) yLoc += 1
         if (path === Direction.LEFT) yLoc -= 1
-        // console.log('x', currX)
-        // console.log('y', currY)
         console.log(state[xLoc][yLoc])
         path = state[xLoc][yLoc].direction
       }
