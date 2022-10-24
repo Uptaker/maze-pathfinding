@@ -12,6 +12,7 @@
     y: number
   }
 
+  let mouseDown = false
   const stateAsStrings: string[] = [
     '.S...OOOOO......',
     '...OOOO.F..OOOO.',
@@ -58,15 +59,20 @@
     state[tile.x][tile.y].type = tile.type === Type.OBSTACLE ? Type.EMPTY : Type.OBSTACLE
   }
 
+  function mouseEnter(tile: Tile) {
+    if (!mouseDown) return
+    swapTile(tile)
+  }
+
 </script>
 
-<div class="board" style="margin-bottom: 5px">
+<div class="board" style="margin-bottom: 5px" on:mousedown={() => mouseDown = true} on:mouseup={() => mouseDown = false} on:mouseleave={() => mouseDown = false}>
     {#if state}
         <div class="row">
             {#each state as row, i}
                 <div class="column">
                     {#each row as value, j}
-                        <div class="square" on:click={() => swapTile(value)}
+                        <div class="square" on:click={() => swapTile(value)} on:mouseenter={() => mouseEnter(value)}
                              style="background-color: {color(value)}">
                             {#if value.type === Type.START || value.type === Type.FINISH}
                                 <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
