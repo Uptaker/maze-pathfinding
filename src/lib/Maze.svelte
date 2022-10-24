@@ -53,6 +53,11 @@
     }
   }
 
+  function swapTile(tile: Tile) {
+    if (tile.type !== Type.EMPTY && tile.type !== Type.OBSTACLE) return
+    state[tile.x][tile.y].type = tile.type === Type.OBSTACLE ? Type.EMPTY : Type.OBSTACLE
+  }
+
 </script>
 
 <div class="board" style="margin-bottom: 5px">
@@ -61,7 +66,7 @@
             {#each state as row, i}
                 <div class="column">
                     {#each row as value, j}
-                        <div class="square" on:click={() => state[value.x][value.y].type = value.type === Type.OBSTACLE ? Type.EMPTY : Type.OBSTACLE}
+                        <div class="square" on:click={() => swapTile(value)}
                              style="background-color: {color(value)}">
                             {#if value.type === Type.START || value.type === Type.FINISH}
                                 <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
