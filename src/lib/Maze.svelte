@@ -27,7 +27,7 @@
     'OOO.....O.......'
   ]
 
-  const state: Tile[][] = stringToTile(stateAsStrings)
+  let state: Tile[][] = stringToTile(stateAsStrings)
 
   onMount(() => console.log(state))
 
@@ -64,6 +64,12 @@
     swapTile(tile)
   }
 
+  function solve() {}
+
+  function reset() {
+    state = stringToTile(stateAsStrings)
+  }
+
 </script>
 
 <div class="board" style="margin-bottom: 5px" on:mousedown={() => mouseDown = true} on:mouseup={() => mouseDown = false} on:mouseleave={() => mouseDown = false}>
@@ -85,7 +91,8 @@
     {/if}
 </div>
 
-<button>Solve</button>
+<button on:click={solve}>Solve</button>
+<button on:click={reset}>Reset</button>
 
 <style>
     .row {
