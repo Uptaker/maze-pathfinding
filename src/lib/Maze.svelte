@@ -61,7 +61,8 @@
             {#each state as row, i}
                 <div class="column">
                     {#each row as value, j}
-                        <div class="square" style="background-color: {color(value)}">
+                        <div class="square" on:click={() => state[value.x][value.y].type = value.type === Type.OBSTACLE ? Type.EMPTY : Type.OBSTACLE}
+                             style="background-color: {color(value)}">
                             {#if value.type === Type.START || value.type === Type.FINISH}
                                 <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
                             {/if}
