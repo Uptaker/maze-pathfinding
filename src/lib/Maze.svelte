@@ -1,5 +1,5 @@
 <script lang="ts">
-
+  import {fade} from 'svelte/transition'
   import {onMount} from 'svelte'
   import type {Position, Tile} from '../types'
   import {Direction, Type} from '../types'
@@ -25,6 +25,8 @@
   let state: Tile[][] = stringToTile(stateAsStrings)
 
   onMount(() => console.log(state))
+
+  let timer = new AbortController()
 
   function stringToTile(strings: string[]): Tile[][] {
     let startingState: Tile[][] = []
@@ -61,46 +63,62 @@
     swapTile(tile)
   }
 
+  function sleep(ms, signal) {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        resolve()
+        signal.removeEventListener('abort', abort)
+      }, ms)
+      const abort = () => {
+        clearTimeout(timeout)
+        reject(new Error('Cancelled'))
+      }
+      if (signal.aborted) abort();
+      else signal.addEventListener('abort', abort)
+    });
+  }
+
   async function solve() {
     let queue = [{x: startPosition.x, y: startPosition.y}] as Position[]
     let pathFound = false
     let pos: Position
 
     while (queue.length > 0 && !pathFound) {
-      pos = queue.shift()
+        pos = queue.shift()
 
-      if (pos.x > 0) {
-        if (state[pos.x - 1][pos.y].type === Type.FINISH) pathFound = true
-        else if (state[pos.x - 1][pos.y].type === Type.EMPTY) {
-          queue.push({x: pos.x - 1, y: pos.y})
-          state[pos.x - 1][pos.y].direction = Direction.DOWN
-          state[pos.x - 1][pos.y].type = Type.GRAY
+        if (pos.x > 0) {
+          if (state[pos.x - 1][pos.y].type === Type.FINISH) pathFound = true
+          else if (state[pos.x - 1][pos.y].type === Type.EMPTY) {
+            queue.push({x: pos.x - 1, y: pos.y})
+            state[pos.x - 1][pos.y].direction = Direction.DOWN
+            state[pos.x - 1][pos.y].type = Type.GRAY
+          }
         }
-      }
-      if (pos.x < state.length - 1) {
-        if (state[pos.x + 1][pos.y].type === Type.FINISH) pathFound = true
-        else if (state[pos.x + 1][pos.y].type === Type.EMPTY) {
-          queue.push({x: pos.x + 1, y: pos.y})
-          state[pos.x + 1][pos.y].direction = Direction.UP
-          state[pos.x + 1][pos.y].type = Type.GRAY
+        if (pos.x < state.length - 1) {
+          if (state[pos.x + 1][pos.y].type === Type.FINISH) pathFound = true
+          else if (state[pos.x + 1][pos.y].type === Type.EMPTY) {
+            queue.push({x: pos.x + 1, y: pos.y})
+            state[pos.x + 1][pos.y].direction = Direction.UP
+            state[pos.x + 1][pos.y].type = Type.GRAY
+          }
         }
-      }
-      if (pos.y > 0) {
-        if (state[pos.x][pos.y - 1].type === Type.FINISH) pathFound = true
-        else if (state[pos.x][pos.y - 1].type === Type.EMPTY) {
-          queue.push({x: pos.x, y: pos.y - 1})
-          state[pos.x][pos.y - 1].direction = Direction.RIGHT
-          state[pos.x][pos.y - 1].type = Type.GRAY
+        if (pos.y > 0) {
+          if (state[pos.x][pos.y - 1].type === Type.FINISH) pathFound = true
+          else if (state[pos.x][pos.y - 1].type === Type.EMPTY) {
+            queue.push({x: pos.x, y: pos.y - 1})
+            state[pos.x][pos.y - 1].direction = Direction.RIGHT
+            state[pos.x][pos.y - 1].type = Type.GRAY
+          }
         }
-      }
-      if (pos.y < state[0].length - 1) {
-        if (state[pos.x][pos.y + 1].type === Type.FINISH) pathFound = true
-        else if (state[pos.x][pos.y + 1].type === Type.EMPTY) {
-          queue.push({x: pos.x, y: pos.y + 1})
-          state[pos.x][pos.y + 1].direction = Direction.LEFT
-          state[pos.x][pos.y + 1].type = Type.GRAY
+        if (pos.y < state[0].length - 1) {
+          if (state[pos.x][pos.y + 1].type === Type.FINISH) pathFound = true
+          else if (state[pos.x][pos.y + 1].type === Type.EMPTY) {
+            queue.push({x: pos.x, y: pos.y + 1})
+            state[pos.x][pos.y + 1].direction = Direction.LEFT
+            state[pos.x][pos.y + 1].type = Type.GRAY
+          }
         }
-      }
+      await sleep(20, timer.signal)
     }
 
     if (!pathFound) message = 'No path found :('
@@ -122,6 +140,8 @@
   }
 
   function reset() {
+    timer.abort()
+    timer = new AbortController()
     state = stringToTile(stateAsStrings)
   }
 
@@ -131,9 +151,9 @@
     {#if state}
         <div class="row">
             {#each state as row, i}
-                <div class="column">
+                <div class="column" >
                     {#each row as value, j}
-                        <div class="square" on:click={() => swapTile(value)} on:mouseenter={() => mouseEnter(value)}
+                        <div transition:fade={{duration: 500, delay: 500}} class="square" on:click={() => swapTile(value)} on:mouseenter={() => mouseEnter(value)}
                              style="background-color: {color(value)}">
                             {#if value.type === Type.START || value.type === Type.FINISH}
                                 <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
