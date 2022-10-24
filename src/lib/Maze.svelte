@@ -133,7 +133,6 @@
         if (path === Direction.DOWN) xLoc += 1
         if (path === Direction.RIGHT) yLoc += 1
         if (path === Direction.LEFT) yLoc -= 1
-        console.log(state[xLoc][yLoc])
         path = state[xLoc][yLoc].direction
       }
     }
