@@ -27,6 +27,7 @@
   onMount(() => console.log(state))
 
   let timer = new AbortController()
+  let delay = 20
 
   function stringToTile(strings: string[]): Tile[][] {
     let startingState: Tile[][] = []
@@ -118,12 +119,12 @@
             state[pos.x][pos.y + 1].type = Type.GRAY
           }
         }
-      await sleep(20, timer.signal)
+      if (delay !== 0) await sleep(delay, timer.signal)
     }
 
-    if (!pathFound) message = 'No path found :('
+    if (!pathFound) message = 'No path found 😣'
     else {
-      message = 'Path found'
+      message = 'Path found 💯🔥'
       let xLoc = pos.x
       let yLoc = pos.y
       let path = state[xLoc][yLoc].direction
@@ -152,7 +153,7 @@
             {#each state as row, i}
                 <div class="column" >
                     {#each row as value, j}
-                        <div transition:fade={{duration: 500, delay: 500}} class="square" on:click={() => swapTile(value)} on:mouseenter={() => mouseEnter(value)}
+                        <div transition:fade={{duration: 500}} class="square" on:click={() => swapTile(value)} on:mouseenter={() => mouseEnter(value)}
                              style="background-color: {color(value)}">
                             {#if value.type === Type.START || value.type === Type.FINISH}
                                 <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
@@ -177,6 +178,9 @@
 
 <label for="debug">Debug mode</label>
 <input type="checkbox" id="debug" bind:checked={debugMode}>
+
+<label for="delay">Delay: {delay}ms</label>
+<input type="range" min="0" max="200" step="20" id="delay" bind:value={delay}>
 
 <style>
     .row {
