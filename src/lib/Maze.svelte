@@ -3,24 +3,16 @@
   import {onMount} from 'svelte'
   import type {Position, Tile} from '../types'
   import {Type} from '../types'
+  import {logTilesToStrings} from "../utils";
   import DijkstraSolver from "./DijkstraSolver.svelte";
+  import {mazes} from '../mazeTemplates'
 
   let startPosition: Position
-  const stateAsStrings: string[] = [
-    'S....OOOOO......',
-    '...OOOO.F..OOOO.',
-    '....OO.OOOOO....',
-    '.........O.O.O..',
-    'O...O..OOO...O..',
-    'OOO.O....OOOOOO.',
-    'O...O.......O...',
-    'O...O...O...O...',
-    'O.......O...O...',
-    'O.......O...O...',
-    'OOO.....O.......'
-  ]
-  let state: Tile[][] = stringToTile(stateAsStrings)
+  let finishPosition: Position
 
+  let state: Tile[][] = stringToTile(mazes.empty)
+
+  let statePicker = Type | undefined
   let timer = new AbortController()
   let delay = 20
   let debugMode = false
@@ -35,6 +27,7 @@
       column.forEach((c, y) => {
         row.push({type: c, x, y} as Tile)
         if (c === Type.START) startPosition = {x, y}
+        if (c === Type.FINISH) finishPosition = {x, y}
       })
       startingState.push(row)
     })
@@ -50,7 +43,7 @@
       case Type.START:
         return 'cyan'
       case Type.FINISH:
-        return 'forestgreen'
+        return 'lawngreen'
       case Type.OBSTACLE:
         return '#5f1602'
       default:
@@ -71,8 +64,29 @@
   function reset() {
     timer.abort()
     timer = new AbortController()
-    state = stringToTile(stateAsStrings)
+    state = stringToTile(mazes.empty)
     message = ''
+  }
+
+  function pickState(pos: Position) {
+    if (statePicker === Type.FINISH) {
+      state[finishPosition.x][finishPosition.y].type = Type.EMPTY
+      state[pos.x][pos.y].type = Type.FINISH
+      finishPosition = pos
+    }
+
+    if (statePicker === Type.START) {
+      state[startPosition.x][startPosition.y].type = Type.EMPTY
+      state[pos.x][pos.y].type = Type.START
+      startPosition = pos
+    }
+
+    statePicker = null
+  }
+
+  function selectMaze(name: string) {
+    reset()
+    state = stringToTile(mazes[name])
   }
 
   onMount(() => console.log(state))
@@ -84,10 +98,10 @@
 <div class="board" style="margin-bottom: 5px" on:mousedown={() => mouseDown = true} on:mouseup={() => mouseDown = false} on:mouseleave={() => mouseDown = false}>
     {#if state}
         <div class="row">
-            {#each state as row, i}
+            {#each state as row, x}
                 <div class="column" >
-                    {#each row as value, j}
-                        <div transition:fade={{duration: 5000}} class="square" on:click={() => swapTile(value)} on:mouseenter={() => mouseEnter(value)}
+                    {#each row as value, y}
+                        <div transition:fade={{duration: 5000}} class="square" on:click={() => statePicker ? pickState({x, y}) : swapTile(value)} on:mouseenter={() => mouseEnter(value)}
                              style="background-color: {color(value)}">
                             {#if value.type === Type.START || value.type === Type.FINISH}
                                 <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
@@ -105,14 +119,40 @@
     {/if}
 </div>
 
-<DijkstraSolver bind:state bind:message {timer} {delay} {startPosition} />
-<button on:click={reset}>Reset</button>
+<div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px">
+    <div class="row gap">
+        <h3>Other</h3>
+        <label for="delay">Delay: {delay}ms</label>
+        <input type="range" min="0" max="200" step="20" id="delay" bind:value={delay}>
+        <button on:click={ () => logTilesToStrings(state)}>Log map to console</button>
+        <div>
+            <label for="debug">Debug mode</label>
+            <input type="checkbox" id="debug" bind:checked={debugMode}>
+        </div>
 
-<label for="debug">Debug mode</label>
-<input type="checkbox" id="debug" bind:checked={debugMode}>
+    </div>
 
-<label for="delay">Delay: {delay}ms</label>
-<input type="range" min="0" max="200" step="20" id="delay" bind:value={delay}>
+    <div class="row gap">
+        <h3>Controls</h3>
+        <DijkstraSolver bind:state bind:message {timer} {delay} {startPosition} />
+        <button on:click={reset}>Reset</button>
+
+        <div class="column gap justify-between">
+            <button on:click={() => statePicker = Type.START}>Pick start</button>
+            <button on:click={() => statePicker = Type.FINISH}>Pick end</button>
+        </div>
+    </div>
+
+    <div class="row gap">
+        <h3>Pre-made maps</h3>
+        <button on:click={() => selectMaze("maze")}>Maze</button>
+        <button on:click={() => selectMaze("spiral")}>Spiral</button>
+        <button on:click={() => selectMaze("long")}>Long</button>
+        <button on:click={() => selectMaze("zigzag")}>Zig-zag</button>
+        <button on:click={() => selectMaze("empty")}>Empty</button>
+        <button on:click={() => selectMaze("edgeToEdge")}>Empty, edge to edge</button>
+    </div>
+</div>
 
 <style>
     .row {
@@ -120,17 +160,32 @@
         flex-direction: column;
     }
 
+    .gap {
+        gap: 5px;
+    }
+
+    .justify-between {
+        justify-content: space-between;
+    }
+
     .column {
         display: flex;
     }
 
     .square {
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
         border: 1px solid #521001;
+        font-size: 11px;
+    }
+
+    .square:hover {
+        filter: brightness(120%);
+        transform: scale(1.3);
+        transition: 0.15s all;
     }
 
     .board {
