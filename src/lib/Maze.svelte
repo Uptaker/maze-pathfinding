@@ -4,8 +4,10 @@
   import type {Position, Tile} from '../types'
   import {Type} from '../types'
   import {logTilesToStrings} from "../utils";
-  import DijkstraSolver from "./DijkstraSolver.svelte";
   import {mazes} from '../mazeTemplates'
+  import OptimizedSolver from "./OptimizedSolver.svelte";
+  import HackySolver from "./HackySolver.svelte";
+  import BFSSolver from "./BFSSolver.svelte";
 
   let startPosition: Position
   let finishPosition: Position
@@ -18,6 +20,7 @@
   let debugMode = false
   let mouseDown = false
   let message = ''
+  let loading = false
 
   function stringToTile(strings: string[]): Tile[][] {
     let startingState: Tile[][] = []
@@ -63,6 +66,7 @@
 
   function reset() {
     timer.abort()
+    loading = false
     timer = new AbortController()
     state = stringToTile(mazes.empty)
     message = ''
@@ -134,12 +138,14 @@
 
     <div class="row gap">
         <h3>Controls</h3>
-        <DijkstraSolver bind:state bind:message {timer} {delay} {startPosition} />
-        <button on:click={reset}>Reset</button>
+        <BFSSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
+        <OptimizedSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
+        <HackySolver bind:state bind:message {timer} {delay} {startPosition} {finishPosition} bind:loading />
+        <button style="background-color: lightblue; margin-top: 30px" on:click={reset}>Reset</button>
 
         <div class="column gap justify-between">
-            <button on:click={() => statePicker = Type.START}>Pick start</button>
-            <button on:click={() => statePicker = Type.FINISH}>Pick end</button>
+            <button on:click={() => statePicker = Type.START} style="background-color: cyan; width: 100%">Pick start</button>
+            <button on:click={() => statePicker = Type.FINISH} style="background-color: lawngreen; width: 100%">Pick end</button>
         </div>
     </div>
 
