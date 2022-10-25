@@ -8,8 +8,7 @@
   export let delay: number
   export let timer: AbortController
   export let message: string
-
-  let loading = false
+  export let loading: boolean
 
   async function solve() {
     loading = true
@@ -74,4 +73,4 @@
   }
 </script>
 
-<button on:click={solve} disabled={loading}>Djikstra</button>
+<button on:click={solve} disabled={loading}>Breath-first solver</button>
