@@ -8,6 +8,7 @@
   import OptimizedSolver from "./OptimizedSolver.svelte";
   import HackySolver from "./HackySolver.svelte";
   import BFSSolver from "./BFSSolver.svelte";
+  import DFSSolver from "./DFSSolver.svelte";
 
   let startPosition: Position
   let finishPosition: Position
@@ -141,6 +142,7 @@
         <BFSSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
         <OptimizedSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
         <HackySolver bind:state bind:message {timer} {delay} {startPosition} {finishPosition} bind:loading />
+        <DFSSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
         <button style="background-color: lightblue; margin-top: 30px" on:click={reset}>Reset</button>
 
         <div class="column gap justify-between">
