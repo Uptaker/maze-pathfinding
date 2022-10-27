@@ -136,16 +136,16 @@
     </div>
 
     <div class="fluid-controls">
-        <div class="row gap">
-            <h3>Other</h3>
-            <label for="delay">Delay: {delay / 2}%</label>
-            <input type="range" min="0" max="200" step="20" id="delay" bind:value={delay}>
-            <button on:click={ () => logTilesToStrings(state)}>Log map to console</button>
-            <div>
-                <label for="debug">Debug mode</label>
-                <input type="checkbox" id="debug" bind:checked={debugMode}>
-            </div>
 
+        <div class="row gap">
+            <h3>Pre-made maps</h3>
+            <button on:click={() => selectMaze("maze")}>Maze</button>
+            <button on:click={() => selectMaze("spiral")}>Spiral</button>
+            <button on:click={() => selectMaze("long")}>Long</button>
+            <button on:click={() => selectMaze("zigzag")}>Zig-zag</button>
+            <button on:click={() => selectMaze("chaos")}>C̪̼̑͗͞Ĥ̥͇ͤAO͆̓͊S̪͇͐͆͜</button>
+            <button on:click={() => selectMaze("empty")}>Empty</button>
+            <button on:click={() => selectMaze("edgeToEdge")}>Empty, edge to edge</button>
         </div>
 
         <div class="row gap">
@@ -163,15 +163,16 @@
         </div>
 
         <div class="row gap">
-            <h3>Pre-made maps</h3>
-            <button on:click={() => selectMaze("maze")}>Maze</button>
-            <button on:click={() => selectMaze("spiral")}>Spiral</button>
-            <button on:click={() => selectMaze("long")}>Long</button>
-            <button on:click={() => selectMaze("zigzag")}>Zig-zag</button>
-            <button on:click={() => selectMaze("chaos")}>C̪̼̑͗͞Ĥ̥͇ͤAO͆̓͊S̪͇͐͆͜</button>
-            <button on:click={() => selectMaze("empty")}>Empty</button>
-            <button on:click={() => selectMaze("edgeToEdge")}>Empty, edge to edge</button>
+            <h3>Other</h3>
+            <label for="delay">Delay: {delay / 2}%</label>
+            <input type="range" min="0" max="200" step="20" id="delay" bind:value={delay}>
+            <button on:click={ () => logTilesToStrings(state)}>Log map to console</button>
+            <div>
+                <label for="debug">Debug mode</label>
+                <input type="checkbox" id="debug" bind:checked={debugMode}>
+            </div>
         </div>
+
     </div>
 </div>
 
