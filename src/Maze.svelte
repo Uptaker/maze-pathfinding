@@ -154,7 +154,7 @@
             <BFSLargestIndex bind:state bind:message {timer} {delay} {startPosition} bind:loading />
             <BFSNearestNeighbor bind:state bind:message {timer} {delay} {startPosition} {finishPosition} bind:loading />
             <DFSSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
-            <button style="background-color: lightblue; margin-top: 30px" on:click={reset}>Reset</button>
+            <button style="background-color: lightblue; margin-top: 30px" on:click={reset}>Reset ↻</button>
 
             <div class="column gap justify-between">
                 <button on:click={() => statePicker = Type.START} style="background-color: cyan; width: 100%">Pick start</button>
