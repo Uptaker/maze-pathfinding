@@ -212,6 +212,7 @@
     .board {
         width: min-content;
         margin: 0 auto;
+        cursor: crosshair;
     }
 
     .fluid-container {
@@ -229,7 +230,7 @@
         gap: 15px;
     }
 
-    @media only screen and (min-width: 1180px) {
+    @media only screen and (min-width: 1400px) {
         .fluid-container {
             flex-direction: row;
         }
