@@ -51,7 +51,7 @@
       case Type.OBSTACLE:
         return '#5f1602'
       default:
-        return '#f1d2d0'
+        return '#f6e3e2'
     }
   }
 
@@ -138,7 +138,7 @@
     <div class="fluid-controls">
         <div class="row gap">
             <h3>Other</h3>
-            <label for="delay">Delay: {delay}ms</label>
+            <label for="delay">Delay: {delay / 2}%</label>
             <input type="range" min="0" max="200" step="20" id="delay" bind:value={delay}>
             <button on:click={ () => logTilesToStrings(state)}>Log map to console</button>
             <div>
@@ -154,7 +154,7 @@
             <BFSLargestIndex bind:state bind:message {timer} {delay} {startPosition} bind:loading />
             <BFSNearestNeighbor bind:state bind:message {timer} {delay} {startPosition} {finishPosition} bind:loading />
             <DFSSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
-            <button style="background-color: lightblue; margin-top: 30px" on:click={reset}>Reset ↻</button>
+            <button style="background-color: lightblue; margin-top: 30px" on:click={reset}>Reset <b>↻</b></button>
 
             <div class="column gap justify-between">
                 <button on:click={() => statePicker = Type.START} style="background-color: cyan; width: 100%">Pick start</button>
