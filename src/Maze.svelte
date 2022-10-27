@@ -1,6 +1,5 @@
 <script lang="ts">
   import {fade} from 'svelte/transition'
-  import {onMount} from 'svelte'
   import type {Position, Tile} from './types'
   import {Type} from './types'
   import {logTilesToStrings} from "./utils";
@@ -12,16 +11,16 @@
 
   let startPosition: Position
   let finishPosition: Position
-
-  let state: Tile[][] = stringToTile(mazes.empty)
-
   let statePicker = Type | undefined
+  let message
+
   let timer = new AbortController()
-  let delay = 20
   let debugMode = false
   let mouseDown = false
-  let message = ''
   let loading = false
+  let delay = 20
+  let state: Tile[][] = stringToTile(mazes.empty)
+
 
   function stringToTile(strings: string[]): Tile[][] {
     let startingState: Tile[][] = []
@@ -104,11 +103,9 @@
     state = stringToTile(mazes[name])
   }
 
-  onMount(() => console.log(state))
-
 </script>
 
-<h2>{message}&nbsp;</h2>
+<h2>{message ?? ''}&nbsp;</h2>
 
 <div class="fluid-container">
     <div class="board" style="margin-bottom: 5px" on:mousedown={() => mouseDown = true} on:mouseup={() => mouseDown = false} on:mouseleave={() => mouseDown = false}>
