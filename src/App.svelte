@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Maze from "./lib/Maze.svelte";
+  import Maze from "./Maze.svelte";
 </script>
 
 <main>

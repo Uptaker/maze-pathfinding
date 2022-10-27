@@ -1,14 +1,14 @@
 <script lang="ts">
   import {fade} from 'svelte/transition'
   import {onMount} from 'svelte'
-  import type {Position, Tile} from '../types'
-  import {Type} from '../types'
-  import {logTilesToStrings} from "../utils";
-  import {mazes} from '../mazeTemplates'
-  import OptimizedSolver from "./OptimizedSolver.svelte";
-  import HackySolver from "./HackySolver.svelte";
-  import BFSSolver from "./BFSSolver.svelte";
-  import DFSSolver from "./DFSSolver.svelte";
+  import type {Position, Tile} from './types'
+  import {Type} from './types'
+  import {logTilesToStrings} from "./utils";
+  import {mazes} from './mazes'
+  import OptimizedSolver from "./solvers/OptimizedSolver.svelte";
+  import HackySolver from "./solvers/HackySolver.svelte";
+  import BFSSolver from "./solvers/BFSSolver.svelte";
+  import DFSSolver from "./solvers/DFSSolver.svelte";
 
   let startPosition: Position
   let finishPosition: Position
