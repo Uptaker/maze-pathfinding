@@ -55,6 +55,17 @@
     }
   }
 
+  function clearTiles() {
+    state.forEach(row => row.forEach(tile => {
+      if (tile.type === Type.BLACK || tile.type === Type.GRAY || tile.type === Type.EMPTY) {
+        tile.type = Type.EMPTY
+        tile.direction = null
+      }
+      console.log(tile.x)
+    }))
+    state = state
+  }
+
   function swapTile(tile: Tile) {
     if (tile.type !== Type.EMPTY && tile.type !== Type.OBSTACLE) return
     state[tile.x][tile.y].type = tile.type === Type.OBSTACLE ? Type.EMPTY : Type.OBSTACLE
@@ -69,7 +80,7 @@
     timer.abort()
     loading = false
     timer = new AbortController()
-    state = stringToTile(mazes.empty)
+    clearTiles()
     message = ''
   }
 
