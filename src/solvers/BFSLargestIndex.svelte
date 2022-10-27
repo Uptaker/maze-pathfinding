@@ -83,4 +83,4 @@
   }
 </script>
 
-<button on:click={solve} disabled={loading}>Semi-Optimized</button>
+<button on:click={solve} disabled={loading}>BFS - Largest Index</button>

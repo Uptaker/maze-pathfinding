@@ -5,8 +5,8 @@
   import {Type} from './types'
   import {logTilesToStrings} from "./utils";
   import {mazes} from './mazes'
-  import OptimizedSolver from "./solvers/OptimizedSolver.svelte";
-  import HackySolver from "./solvers/HackySolver.svelte";
+  import BFSLargestIndex from "./solvers/BFSLargestIndex.svelte";
+  import BFSNearestNeighbor from "./solvers/BFSNearestNeighbor.svelte";
   import BFSSolver from "./solvers/BFSSolver.svelte";
   import DFSSolver from "./solvers/DFSSolver.svelte";
 
@@ -140,8 +140,8 @@
     <div class="row gap">
         <h3>Controls</h3>
         <BFSSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
-        <OptimizedSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
-        <HackySolver bind:state bind:message {timer} {delay} {startPosition} {finishPosition} bind:loading />
+        <BFSLargestIndex bind:state bind:message {timer} {delay} {startPosition} bind:loading />
+        <BFSNearestNeighbor bind:state bind:message {timer} {delay} {startPosition} {finishPosition} bind:loading />
         <DFSSolver bind:state bind:message {timer} {delay} {startPosition} bind:loading />
         <button style="background-color: lightblue; margin-top: 30px" on:click={reset}>Reset</button>
 

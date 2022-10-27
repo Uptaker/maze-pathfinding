@@ -94,4 +94,4 @@
   }
 </script>
 
-<button on:click={solve} disabled={loading}>Hacky</button>
+<button on:click={solve} disabled={loading}>BFS - Nearest Neighbor</button>
