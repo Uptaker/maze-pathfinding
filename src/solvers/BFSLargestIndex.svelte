@@ -83,4 +83,4 @@
   }
 </script>
 
-<button on:click={solve} disabled={loading}>BFS - Largest Index</button>
+<button on:click={solve} disabled={loading}>Largest Index</button>

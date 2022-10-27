@@ -94,4 +94,4 @@
   }
 </script>
 
-<button on:click={solve} disabled={loading}>BFS - Nearest Neighbor</button>
+<button on:click={solve} disabled={loading}>Nearest Neighbor</button>

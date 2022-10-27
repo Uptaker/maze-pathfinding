@@ -73,4 +73,4 @@
   }
 </script>
 
-<button on:click={solve} disabled={loading}>Breath-first solver</button>
+<button on:click={solve} disabled={loading}>Breath-first Search</button>

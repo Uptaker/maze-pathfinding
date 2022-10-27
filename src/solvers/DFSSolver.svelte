@@ -73,4 +73,4 @@
   }
 </script>
 
-<button on:click={solve} disabled={loading}>Depth-first solver</button>
+<button on:click={solve} disabled={loading}>Depth-first Search</button>
