@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {fade} from 'svelte/transition'
+  import {fade, slide} from 'svelte/transition'
   import type {Position, Tile} from './types'
   import {Type} from './types'
   import {logTilesToStrings} from "./utils";
@@ -105,37 +105,42 @@
 
 </script>
 
-<h2>{message ?? ''}&nbsp;</h2>
 
-<div class="fluid-container">
-    <div class="board" style="margin-bottom: 5px" on:mousedown={() => mouseDown = true} on:mouseup={() => mouseDown = false} on:mouseleave={() => mouseDown = false}>
-        {#if state}
-            <div class="row">
-                {#each state as row, x}
-                    <div class="column" >
-                        {#each row as value, y}
-                            <div transition:fade={{duration: 5000}} class="square" on:click={() => statePicker ? pickState({x, y}) : swapTile(value)} on:mouseenter={() => mouseEnter(value)}
-                                 style="background-color: {color(value)}">
-                                {#if value.type === Type.START || value.type === Type.FINISH}
-                                    <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
-                                {/if}
-                                {#if debugMode}
-                                    {#if value.direction}<b>{value.direction}</b>{/if}
-                                    <span>x: {value.x}</span>
-                                    <span>y: {value.y}</span>
-                                {/if}
-                            </div>
-                        {/each}
-                    </div>
-                {/each}
-            </div>
+<div class="area">
+    <div>
+        <div class="board" style="margin-bottom: 5px" on:mousedown={() => mouseDown = true} on:mouseup={() => mouseDown = false} on:mouseleave={() => mouseDown = false}>
+            {#if state}
+                <div class="row">
+                    {#each state as row, x}
+                        <div class="column" >
+                            {#each row as value, y}
+                                <div transition:fade={{duration: 5000}} class="square" on:click={() => statePicker ? pickState({x, y}) : swapTile(value)} on:mouseenter={() => mouseEnter(value)}
+                                     style="background-color: {color(value)}">
+                                    {#if value.type === Type.START || value.type === Type.FINISH}
+                                        <b>{value.type === Type.START ? 'Start' : 'Finish'}</b>
+                                    {/if}
+                                    {#if debugMode}
+                                        {#if value.direction}<b>{value.direction}</b>{/if}
+                                        <span>x: {value.x}</span>
+                                        <span>y: {value.y}</span>
+                                    {/if}
+                                </div>
+                            {/each}
+                        </div>
+                    {/each}
+                </div>
+            {/if}
+        </div>
+        {#if message}
+            <h2 transition:slide>{message}</h2>
         {/if}
     </div>
+
 
     <div class="fluid-controls">
 
         <div class="row gap">
-            <h3>Pre-made maps</h3>
+            <h3>Maps</h3>
             <button on:click={() => selectMaze("maze")}>Maze</button>
             <button on:click={() => selectMaze("spiral")}>Spiral</button>
             <button on:click={() => selectMaze("long")}>Long</button>
@@ -213,28 +218,36 @@
         cursor: crosshair;
     }
 
-    .fluid-container {
+    .area {
         display: flex;
         width: 100%;
-        gap: 40px;
+        gap: 10px;
         flex-direction: column;
         justify-content: space-between;
-        align-content: center;
+        align-items: center;
+        padding: 10px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     }
 
     .fluid-controls {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 15px;
+        padding: 20px;
+        width: 100%;
     }
 
-    @media only screen and (min-width: 1400px) {
-        .fluid-container {
+    @media only screen and (min-width: 1290px) {
+        .area {
             flex-direction: row;
         }
+
         .fluid-controls {
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
+            gap: 5px;
         }
     }
 </style>
